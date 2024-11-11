@@ -27,6 +27,7 @@ var markdown1 = &cobra.Command{
 		work.GetMarkdown()
 	},
 }
+
 var tableWriter = &cobra.Command{
 	Use:   "table",
 	Short: "Greet the user",
@@ -42,8 +43,8 @@ var version = &cobra.Command{
 	Long:  `This subcommand greets the user with a custom message.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		ref := kmapi.TypedObjectReference{
-			APIGroup: "kubedb.com", //k8s_group
-			Kind:     "MongoDB",    //k8s_kind
+			APIGroup: "kubedb.com", // k8s_group
+			Kind:     "MongoDB",    // k8s_kind
 		}
 		version, err := work.GetPreferredResourceVersion(ref)
 		if err != nil {
@@ -52,6 +53,7 @@ var version = &cobra.Command{
 		fmt.Println("=====================", version)
 	},
 }
+
 var resource = &cobra.Command{
 	Use:   "resource",
 	Short: "Greet the user",
@@ -107,4 +109,6 @@ func init() {
 	RootCmd.AddCommand(tableWriter)
 	RootCmd.AddCommand(mongoBDMetricsCursorOpen)
 	RootCmd.AddCommand(work_postgres.PgCmdTest)
+	RootCmd.AddCommand(work_postgres.PgCmdTest2)
+	RootCmd.AddCommand(work_postgres.PgCmdTestSharedBuffers)
 }

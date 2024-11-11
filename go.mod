@@ -5,6 +5,7 @@ go 1.22.1
 toolchain go1.22.5
 
 require (
+	github.com/dustin/go-humanize v1.0.1
 	github.com/gomarkdown/markdown v0.0.0-20240730141124-034f12af3bf6
 	github.com/lib/pq v1.10.9
 	github.com/olekukonko/tablewriter v0.0.6-0.20230925090304-df64c4bbad77
