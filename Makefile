@@ -4,6 +4,7 @@ IMAGE_TAG=latest
 REGISTRY_URL=shn27# Replace with your Docker registry (Docker Hub or private registry)
 DOCKERFILE_PATH=./Dockerfile
 K8S_DEPLOYMENT_FILE=k8s/deployment.yaml
+K8S_CLUSTER_ROLE_FILE=k8s/cluster_role.yaml
 KIND_CLUSTER_NAME=kind
 NAMESPACE=default
 
@@ -34,7 +35,7 @@ push-to-kind: build
 deploy:push-to-kind
 	# Apply the Kubernetes deployment and service YAML
 	kubectl apply -f $(K8S_DEPLOYMENT_FILE) -n $(NAMESPACE)
-
+	kubectl apply -f $(K8S_CLUSTER_ROLE_FILE)
 
 # Clean up the environment (optional)
 .PHONY: clean
