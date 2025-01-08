@@ -108,7 +108,6 @@ func init() {
 	RootCmd.AddCommand(mongodbServerStatus)
 	RootCmd.AddCommand(tableWriter)
 	RootCmd.AddCommand(mongoBDMetricsCursorOpen)
-	RootCmd.AddCommand(work_postgres.PgCmdTest)
 	RootCmd.AddCommand(work_postgres.PgCmdTest2)
 	RootCmd.AddCommand(work_postgres.PgCmdTestSharedBuffers)
 }
