@@ -2,10 +2,12 @@ package cmd
 
 import (
 	"fmt"
+	"ops-center/kubeDBClientOpsTest/work"
+	"ops-center/kubeDBClientOpsTest/work_mssqlserver"
+	"ops-center/kubeDBClientOpsTest/work_postgres"
 
-	utils "github.com/shn27/Test/utils"
-	"github.com/shn27/Test/work"
-	"github.com/shn27/Test/work_postgres"
+	utils "ops-center/kubeDBClientOpsTest/utils"
+
 	"github.com/spf13/cobra"
 	kmapi "kmodules.xyz/client-go/api/v1"
 )
@@ -110,4 +112,5 @@ func init() {
 	RootCmd.AddCommand(mongoBDMetricsCursorOpen)
 	RootCmd.AddCommand(work_postgres.PgCmdTest2)
 	RootCmd.AddCommand(work_postgres.PgCmdTestSharedBuffers)
+	RootCmd.AddCommand(work_mssqlserver.MSSQLCmdTest2)
 }

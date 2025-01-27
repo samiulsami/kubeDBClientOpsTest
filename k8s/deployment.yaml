@@ -17,7 +17,7 @@ spec:
       serviceAccountName: super-admin
       containers:
         - name: sami-pg-container
-          image: 0.1.acdc.appscode.ninja/library/sami-pg:latest
+          image: sami7786/kubedbclientopstest:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8080 # Change this based on your app's port

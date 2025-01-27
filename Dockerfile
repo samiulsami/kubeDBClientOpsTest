@@ -27,4 +27,4 @@ COPY --from=builder /app/my-app .
 EXPOSE 8080
 
 # Run the Go binary
-CMD ["./my-app", "pgTestAll"]
+CMD ["./my-app", "mssqlTest"]

@@ -1,7 +1,6 @@
 package work
 
 import (
-	"fmt"
 	"os"
 	"testing"
 	"time"
@@ -74,8 +73,8 @@ func Test_table_writer1(t *testing.T) {
 				checkType = result.CheckType
 				timestamp = result.Timestamp
 			}
-			outputText := fmt.Sprintf("%s", output.Message)
-			outputText1 := fmt.Sprintf("%s", output.Data)
+			outputText := output.Message
+			outputText1 := output.Data
 			table.Append([]string{checkType, timestamp, outputText, outputText1})
 		}
 	}

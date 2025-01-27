@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/shn27/Test/cmd"
+	"ops-center/kubeDBClientOpsTest/cmd"
 )
 
 func main() {
