@@ -2,7 +2,6 @@ package work_postgres
 
 import (
 	"encoding/json"
-	"fmt"
 
 	gohumanize "github.com/dustin/go-humanize"
 	corev1 "k8s.io/api/core/v1"
@@ -129,7 +128,7 @@ func TestCheckRequestMethods() {
 	}
 
 	if pgContainer == nil {
-		return 0, fmt.Errorf("postgres container not found")
+		klog.Error("postgres container not found")
 	}
 
 	if qv, exists := pgContainer.Resources.Requests[postgresResourceMemoryKey]; exists {
