@@ -48,6 +48,16 @@ spec:
                 - IfReady
                 - Always
                 type: string
+              authentication:
+                properties:
+                  secretRef:
+                    properties:
+                      name:
+                        default: ""
+                        type: string
+                    type: object
+                    x-kubernetes-map-type: atomic
+                type: object
               configuration:
                 properties:
                   pgbouncer:
@@ -69,6 +79,13 @@ spec:
                 required:
                 - pgbouncer
                 type: object
+              databaseRef:
+                properties:
+                  name:
+                    default: ""
+                    type: string
+                type: object
+                x-kubernetes-map-type: atomic
               horizontalScaling:
                 properties:
                   replicas:
@@ -77,13 +94,6 @@ spec:
                 type: object
               restart:
                 type: object
-              serverRef:
-                properties:
-                  name:
-                    default: ""
-                    type: string
-                type: object
-                x-kubernetes-map-type: atomic
               timeout:
                 type: string
               tls:
@@ -173,6 +183,11 @@ spec:
                       - alias
                       type: object
                     type: array
+                  clientAuthMode:
+                    enum:
+                    - md5
+                    - scram-sha-256
+                    type: string
                   issuerRef:
                     properties:
                       apiGroup:
@@ -190,6 +205,15 @@ spec:
                     type: boolean
                   rotateCertificates:
                     type: boolean
+                  sslMode:
+                    enum:
+                    - disable
+                    - allow
+                    - prefer
+                    - require
+                    - verify-ca
+                    - verify-full
+                    type: string
                 type: object
               type:
                 enum:
@@ -197,6 +221,9 @@ spec:
                 - VerticalScaling
                 - UpdateVersion
                 - Reconfigure
+                - RotateAuth
+                - Restart
+                - ReconfigureTLS
                 type: string
               updateVersion:
                 properties:
@@ -287,7 +314,7 @@ spec:
                     type: object
                 type: object
             required:
-            - serverRef
+            - databaseRef
             - type
             type: object
           status:

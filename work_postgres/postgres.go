@@ -6,8 +6,9 @@ import (
 
 	_ "database/sql"
 
+	utils "ops-center/kubeDBClientOpsTest/utils"
+
 	_ "github.com/lib/pq"
-	utils "github.com/shn27/Test/utils"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"sigs.k8s.io/controller-runtime/pkg/client"

@@ -6,7 +6,8 @@ import (
 	"log"
 	"time"
 
-	utils "github.com/shn27/Test/utils"
+	utils "ops-center/kubeDBClientOpsTest/utils"
+
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -75,5 +76,4 @@ func GetDBClientLocalHost() {
 
 	res, _ := client.ListDatabases(context.Background(), "")
 	fmt.Println(res)
-
 }

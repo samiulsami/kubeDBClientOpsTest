@@ -55,8 +55,15 @@ spec:
                 x-kubernetes-map-type: atomic
               authSecret:
                 properties:
+                  activeFrom:
+                    format: date-time
+                    type: string
+                  externallyManaged:
+                    type: boolean
                   name:
                     default: ""
+                    type: string
+                  rotateAfter:
                     type: string
                 type: object
                 x-kubernetes-map-type: atomic
@@ -3385,6 +3392,7 @@ spec:
                       - standby
                       - stats
                       - dashboard
+                      - secondary
                       type: string
                     metadata:
                       properties:
@@ -13150,9 +13158,15 @@ spec:
                 x-kubernetes-map-type: atomic
               zookeeperRef:
                 properties:
+                  externallyManaged:
+                    type: boolean
                   name:
                     type: string
                   namespace:
+                    type: string
+                  pathsBase:
+                    type: string
+                  version:
                     type: string
                 required:
                 - name

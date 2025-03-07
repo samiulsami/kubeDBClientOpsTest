@@ -3,7 +3,8 @@ package work_mssqlserver
 import (
 	"fmt"
 
-	core "k8s.io/api/core/v1"
+	utils "ops-center/kubeDBClientOpsTest/utils"
+
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	kmapi "kmodules.xyz/client-go/api/v1"
@@ -11,40 +12,21 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-func (r RemedyCheck) getMSSQLServerDB(appRef *core.TypedObjectReference) (*dbapiv1alpha2.MSSQLServer, error) {
-	ref := kmapi.ObjectReference{
-		Name:      appRef.Name,
-		Namespace: *appRef.Namespace,
-	}
-
-	version, err := findResourceVersion(r.restMapper, schema.GroupKind{
-		Group: *appRef.APIGroup,
-		Kind:  appRef.Kind,
-	})
+func GetMSSQLServerDBAndClient() (client.Client, *dbapiv1alpha2.MSSQLServer, error) {
+	kubeClient, err := utils.GetKBClient()
 	if err != nil {
-		return nil, fmt.Errorf("failed to find version : %v", err)
+		return nil, nil, fmt.Errorf("failed to get kube client: %w", err)
 	}
 
-	obj, err := r.getK8sObject(schema.GroupVersionKind{
-		Group:   *appRef.APIGroup,
-		Kind:    appRef.Kind,
-		Version: version,
-	}, ref)
+	db, err := GetMSSQLServerDB(kubeClient)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get k8s object : %v", err)
+		return nil, nil, fmt.Errorf("failed to get postgres db: %w", err)
 	}
 
-	db := &dbapiv1alpha2.MSSQLServer{}
-	err = runtime.DefaultUnstructuredConverter.
-		FromUnstructured(obj.UnstructuredContent(), db)
-	if err != nil {
-		return nil, fmt.Errorf("failed to convert unstructured object to a concrete type: %w", err)
-	}
-
-	return db, nil
+	return kubeClient, db, nil
 }
 
-func GetMSSQLServerDB(kbClient client.Client) (*dbapi.Postgres, error) {
+func GetMSSQLServerDB(kbClient client.Client) (*dbapiv1alpha2.MSSQLServer, error) {
 	ref := kmapi.ObjectReference{
 		Name:      "mssqlserver",
 		Namespace: "demo",
@@ -60,7 +42,7 @@ func GetMSSQLServerDB(kbClient client.Client) (*dbapi.Postgres, error) {
 		return nil, fmt.Errorf("failed to get k8s object : %v", err)
 	}
 
-	db := &dbapi.Postgres{}
+	db := &dbapiv1alpha2.MSSQLServer{}
 	err = runtime.DefaultUnstructuredConverter.
 		FromUnstructured(obj.UnstructuredContent(), db)
 	if err != nil {

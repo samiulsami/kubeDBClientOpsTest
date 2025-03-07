@@ -50,10 +50,15 @@ spec:
             properties:
               authSecret:
                 properties:
+                  activeFrom:
+                    format: date-time
+                    type: string
                   externallyManaged:
                     type: boolean
                   name:
                     default: ""
+                    type: string
+                  rotateAfter:
                     type: string
                 type: object
                 x-kubernetes-map-type: atomic
@@ -129,6 +134,24 @@ spec:
                         required:
                         - name
                         type: object
+                      manifestOptions:
+                        properties:
+                          archiver:
+                            default: false
+                            type: boolean
+                          archiverRef:
+                            properties:
+                              name:
+                                type: string
+                              namespace:
+                                type: string
+                            required:
+                            - name
+                            type: object
+                          initScript:
+                            default: false
+                            type: boolean
+                        type: object
                       manifestRepository:
                         properties:
                           name:
@@ -140,6 +163,13 @@ spec:
                         type: object
                       recoveryTimestamp:
                         format: date-time
+                        type: string
+                      replicationStrategy:
+                        enum:
+                        - fscopy
+                        - clone
+                        - sync
+                        - none
                         type: string
                     required:
                     - recoveryTimestamp
@@ -39677,10 +39707,15 @@ spec:
             properties:
               authSecret:
                 properties:
+                  activeFrom:
+                    format: date-time
+                    type: string
                   externallyManaged:
                     type: boolean
                   name:
                     default: ""
+                    type: string
+                  rotateAfter:
                     type: string
                 type: object
                 x-kubernetes-map-type: atomic
@@ -39749,6 +39784,24 @@ spec:
                         required:
                         - name
                         type: object
+                      manifestOptions:
+                        properties:
+                          archiver:
+                            default: false
+                            type: boolean
+                          archiverRef:
+                            properties:
+                              name:
+                                type: string
+                              namespace:
+                                type: string
+                            required:
+                            - name
+                            type: object
+                          initScript:
+                            default: false
+                            type: boolean
+                        type: object
                       manifestRepository:
                         properties:
                           name:
@@ -39760,6 +39813,13 @@ spec:
                         type: object
                       recoveryTimestamp:
                         format: date-time
+                        type: string
+                      replicationStrategy:
+                        enum:
+                        - fscopy
+                        - clone
+                        - sync
+                        - none
                         type: string
                     required:
                     - recoveryTimestamp
@@ -43675,6 +43735,7 @@ spec:
                       - standby
                       - stats
                       - dashboard
+                      - secondary
                       type: string
                     metadata:
                       properties:
