@@ -5,9 +5,11 @@ import (
 
 	utils "ops-center/kubeDBClientOpsTest/utils"
 
+	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	kmapi "kmodules.xyz/client-go/api/v1"
+	"kubedb.dev/apimachinery/apis/kubedb"
 	dbapiv1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
@@ -50,6 +52,34 @@ func GetMSSQLServerDB(kbClient client.Client) (*dbapiv1alpha2.MSSQLServer, error
 	}
 
 	return db, nil
+}
+
+func GetTotalMemoryMSSQLServer(db *dbapiv1alpha2.MSSQLServer) (*int64, error) {
+	if db == nil {
+		return nil, fmt.Errorf("mssqlserver db is nil")
+	}
+
+	totalMemory := int64(0)
+	var mssqlServerContainer *v1.Container
+	for _, v := range db.Spec.PodTemplate.Spec.Containers {
+		if v.Name == kubedb.MSSQLContainerName {
+			mssqlServerContainer = &v
+			break
+		}
+	}
+
+	if mssqlServerContainer == nil {
+		return nil, fmt.Errorf("mssqlserver container not found")
+	}
+
+	if qv, exists := mssqlServerContainer.Resources.Limits[v1.ResourceMemory]; exists {
+		totalMemory += int64(qv.Value())
+	} else {
+		return nil, fmt.Errorf("mssqlserver memory request not found")
+	}
+
+	intPtr := &totalMemory
+	return intPtr, nil
 }
 
 // func (r RemedyCheck) getMSSQLServerClient(db *dbapiv1alpha2.MSSQLServer) (*mssqlserver.Client, error) {

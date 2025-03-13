@@ -11,6 +11,12 @@ func TestMSSQLServerStatus() {
 		return
 	}
 
-	klog.Infof("mssql.Status.State: %s", mssql)
+	klog.Infof("mssql.Status.State: %s", &mssql.Status.Conditions)
+	totalMemory, err := GetTotalMemoryMSSQLServer(mssql)
+	if err != nil {
+		klog.Errorf("error fetching total memory limit from mssqlserver: %w", err)
+		return
+	}
+	klog.Infof("mssql memory limit: %d", *totalMemory)
 	klog.Info("=======Test mssqlserver status=======")
 }
