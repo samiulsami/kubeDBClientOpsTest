@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"ops-center/kubeDBClientOpsTest/work"
+	"ops-center/kubeDBClientOpsTest/work_kafka"
 	"ops-center/kubeDBClientOpsTest/work_mssqlserver"
 	"ops-center/kubeDBClientOpsTest/work_postgres"
 
@@ -113,4 +114,5 @@ func init() {
 	RootCmd.AddCommand(work_postgres.PgCmdTest2)
 	RootCmd.AddCommand(work_postgres.PgCmdTestSharedBuffers)
 	RootCmd.AddCommand(work_mssqlserver.MSSQLCmdTest2)
+	RootCmd.AddCommand(work_kafka.KafkaCmdTest)
 }
