@@ -2,6 +2,7 @@ package work_kafka
 
 import (
 	"context"
+	"strings"
 
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -28,7 +29,7 @@ func TestKafkaStatus() {
 		return
 	}
 
-	for _, v := range brokers {
+	for _, v := range strings.Split(brokers, ",") {
 		klog.Infof("broker: %s\n", v)
 	}
 
@@ -54,6 +55,7 @@ func TestKafkaStatus() {
 
 	kafkaClient, err := kafka.NewKubeDBClientBuilder(kbClient, kafkaDB).
 		WithContext(context.TODO()).
+		WithURL(brokers).
 		GetKafkaClient()
 	if err != nil {
 		klog.Errorf("failed to create sarama client: %v", err)

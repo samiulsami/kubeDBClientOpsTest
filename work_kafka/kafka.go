@@ -3,7 +3,6 @@ package work_kafka
 import (
 	"context"
 	"fmt"
-	"strings"
 
 	"github.com/IBM/sarama"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
@@ -11,7 +10,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-func getKafkaBrokers(ctx context.Context, ctrlClient client.Client, name, namespace string) ([]string, error) {
+func getKafkaBrokers(ctx context.Context, ctrlClient client.Client, name, namespace string) (string, error) {
 	appBinding := &unstructured.Unstructured{}
 	appBinding.SetGroupVersionKind(schema.GroupVersionKind{
 		Group:   "appcatalog.appscode.com",
@@ -27,18 +26,18 @@ func getKafkaBrokers(ctx context.Context, ctrlClient client.Client, name, namesp
 		},
 		appBinding,
 	); err != nil {
-		return nil, fmt.Errorf("failed to get appbinding: %w", err)
+		return "", fmt.Errorf("failed to get appbinding: %w", err)
 	}
 
 	brokers, found, err := unstructured.NestedString(appBinding.Object, "spec", "clientConfig", "url")
 	if err != nil {
-		return nil, fmt.Errorf("failed to get brokers: %w", err)
+		return "", fmt.Errorf("failed to get brokers: %w", err)
 	}
 	if !found {
-		return nil, fmt.Errorf("brokers not found")
+		return "", fmt.Errorf("brokers not found")
 	}
 
-	return strings.Split(brokers, ","), nil
+	return brokers, nil
 }
 
 func getKafkaUnderReplicatedPartitions(client sarama.Client) ([]string, error) {
