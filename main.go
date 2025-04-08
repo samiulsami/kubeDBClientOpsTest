@@ -1,9 +1,11 @@
 package main
 
 import (
-	"github.com/shn27/Test/cmd"
+	"ops-center/kubeDBClientOpsTest/cmd"
 )
 
 func main() {
-	cmd.RootCmd.Execute()
+	if err := cmd.RootCmd.Execute(); err != nil {
+		panic(err)
+	}
 }

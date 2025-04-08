@@ -1,10 +1,11 @@
 # Define variables
-IMAGE_NAME=sami-pg
-IMAGE_TAG=latest
-REGISTRY_URL=0.1.acdc.appscode.ninja/library
+IMAGE_NAME=kubedbclientopstest
+IMAGE_TAG=kafka
+REGISTRY_URL=sami7786# Replace with your Docker registry (Docker Hub or private registry)
 DOCKERFILE_PATH=./Dockerfile
 K8S_DEPLOYMENT_FILE=k8s/deployment.yaml
 K8S_CLUSTER_ROLE_FILE=k8s/cluster_role.yaml
+KIND_CLUSTER_NAME=kind
 NAMESPACE=default
 
 # Build the Docker image
@@ -14,17 +15,27 @@ build:
 
 # Tag the Docker image for the registry
 .PHONY: tag
-tag: build
+tag:
 	docker tag $(IMAGE_NAME):$(IMAGE_TAG) $(REGISTRY_URL)/$(IMAGE_NAME):$(IMAGE_TAG)
 
 # Push the Docker image to the registry
 .PHONY: push
-push: tag
+push: build tag
+	docker push $(REGISTRY_URL)/$(IMAGE_NAME):$(IMAGE_TAG)
+
+# Push the Docker image to kind
+.PHONY: push-to-kind
+push-to-kind: build tag
+	kind load docker-image $(IMAGE_NAME):$(IMAGE_TAG) --name $(KIND_CLUSTER_NAME)
+
+# Push the Docker image to k3s
+.PHONY: push-to-docker
+push-to-docker: build tag
 	docker push $(REGISTRY_URL)/$(IMAGE_NAME):$(IMAGE_TAG)
 
 # Deploy Docker image to Kind cluster
 .PHONY: deploy
-deploy: push
+deploy: push-to-docker
 	# Apply the Kubernetes deployment and service YAML
 	kubectl apply -f $(K8S_DEPLOYMENT_FILE) -n $(NAMESPACE)
 	kubectl apply -f $(K8S_CLUSTER_ROLE_FILE)
