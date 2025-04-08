@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: sami-pg-deployment
+  name: sami-kafka-deployment
   labels:
-    app: pg-test-app
+    app: kafka-test-app
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: pg-test-app
+      app: kafka-test-app
   template:
     metadata:
       labels:
-        app: pg-test-app
+        app: kafka-test-app
     spec:
       serviceAccountName: super-admin
       containers:
-        - name: sami-pg-container
-          image: sami7786/kubedbclientopstest:latest
+        - name: sami-kafka-container
+          image: sami7786/kubedbclientopstest:kafka
           imagePullPolicy: Always
           ports:
             - containerPort: 8080 # Change this based on your app's port
@@ -25,10 +25,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: pg-test-app-service
+  name: kafka-test-app-service
 spec:
   selector:
-    app: pg-test-app
+    app: kafka-test-app
   ports:
     - protocol: TCP
       port: 80

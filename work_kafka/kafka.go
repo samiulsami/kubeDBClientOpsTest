@@ -41,19 +41,7 @@ func getKafkaBrokers(ctx context.Context, ctrlClient client.Client, name, namesp
 	return strings.Split(brokers, ","), nil
 }
 
-func getKafkaUnderReplicatedPartitions(
-	ctx context.Context,
-	ctrlClient client.Client,
-	brokers []string,
-	name, namespace string,
-) ([]string, error) {
-	config := sarama.NewConfig()
-	client, err := sarama.NewClient(brokers, config)
-	if err != nil {
-		return nil, fmt.Errorf("failed to create sarama client: %w", err)
-	}
-	defer client.Close()
-
+func getKafkaUnderReplicatedPartitions(client sarama.Client) ([]string, error) {
 	topics, err := client.Topics()
 	if err != nil {
 		return nil, fmt.Errorf("failed to get topics: %w", err)

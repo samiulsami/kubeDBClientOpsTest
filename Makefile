@@ -1,6 +1,6 @@
 # Define variables
 IMAGE_NAME=kubedbclientopstest
-IMAGE_TAG=latest
+IMAGE_TAG=kafka
 REGISTRY_URL=sami7786# Replace with your Docker registry (Docker Hub or private registry)
 DOCKERFILE_PATH=./Dockerfile
 K8S_DEPLOYMENT_FILE=k8s/deployment.yaml
@@ -20,12 +20,12 @@ tag:
 
 # Push the Docker image to the registry
 .PHONY: push
-push: tag
+push: build tag
 	docker push $(REGISTRY_URL)/$(IMAGE_NAME):$(IMAGE_TAG)
 
 # Push the Docker image to kind
 .PHONY: push-to-kind
-push-to-kind: build
+push-to-kind: build tag
 	kind load docker-image $(IMAGE_NAME):$(IMAGE_TAG) --name $(KIND_CLUSTER_NAME)
 
 # Push the Docker image to k3s
