@@ -75,4 +75,12 @@ func TestKafkaStatus() {
 	for _, v := range underReplicatedPartitions {
 		klog.Infof("under replicated partition: %s\n", v)
 	}
+
+	brokerData, err := verifyKafkaBrokers(kafkaClient, strings.Split(brokers, ","))
+	if err != nil {
+		klog.Errorf("failed to verify kafka brokers : %w", err)
+		return
+	}
+
+	klog.Infof("Broker data : %s\n", string(brokerData))
 }

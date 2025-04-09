@@ -78,3 +78,54 @@ func getKafkaUnderReplicatedPartitions(client sarama.Client) ([]string, error) {
 
 	return underReplicatedPartitions, nil
 }
+
+func verifyKafkaBrokers(client sarama.Client, brokers []string) ([]byte, error) {
+	if client == nil {
+		return nil, fmt.Errorf("client is nil")
+	}
+
+	clusterBrokers := client.Brokers()
+	if len(clusterBrokers) != len(brokers) {
+		return nil, fmt.Errorf("expected '%d' brokers, but found '%d' ", len(brokers), len(clusterBrokers))
+	}
+
+	brokersStatus := []byte{}
+	for _, broker := range clusterBrokers {
+		if err := broker.Open(client.Config()); err != nil {
+			brokersStatus = fmt.Appendf(
+				brokersStatus,
+				"Broker '%s' is down: '%v'\n",
+				broker.Addr(),
+				err,
+			)
+			continue
+		}
+
+		connected, err := broker.Connected()
+		if err != nil {
+			brokersStatus = fmt.Appendf(
+				brokersStatus,
+				"Failed to check connection status for broker '%s': %v\n",
+				broker.Addr(),
+				err,
+			)
+			continue
+		}
+
+		if !connected {
+			brokersStatus = fmt.Appendf(
+				brokersStatus,
+				"Broker '%s' is down\n",
+				broker.Addr(),
+			)
+		} else {
+			brokersStatus = fmt.Appendf(
+				brokersStatus,
+				"Broker '%s' is up\n",
+				broker.Addr(),
+			)
+		}
+	}
+
+	return brokersStatus, nil
+}
