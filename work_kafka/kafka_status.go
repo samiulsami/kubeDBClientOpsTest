@@ -78,7 +78,7 @@ func TestKafkaStatus() {
 
 	brokerData, err := verifyKafkaBrokers(kafkaClient, strings.Split(brokers, ","))
 	if err != nil {
-		klog.Errorf("failed to verify kafka brokers : %w", err)
+		klog.Errorf("failed to verify kafka brokers : %v", err)
 		return
 	}
 
