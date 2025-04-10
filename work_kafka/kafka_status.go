@@ -61,6 +61,7 @@ func TestKafkaStatus() {
 		klog.Errorf("failed to create sarama client: %v", err)
 		return
 	}
+	defer kafkaClient.Close()
 
 	underReplicatedPartitions, err := getKafkaUnderReplicatedPartitions(kafkaClient)
 	if err != nil {

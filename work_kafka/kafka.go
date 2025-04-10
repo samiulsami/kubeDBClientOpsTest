@@ -50,7 +50,6 @@ func getKafkaUnderReplicatedPartitions(client sarama.Client) ([]string, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to create admin client: %w", err)
 	}
-	defer admin.Close()
 
 	metadata, err := admin.DescribeTopics(topics)
 	if err != nil {
@@ -118,11 +117,21 @@ func verifyKafkaBrokers(client sarama.Client, brokers []string) ([]byte, error) 
 				"Broker '%s' is down\n",
 				broker.Addr(),
 			)
-		} else {
+			continue
+		}
+
+		brokersStatus = fmt.Appendf(
+			brokersStatus,
+			"Broker '%s' is up\n",
+			broker.Addr(),
+		)
+
+		if err := broker.Close(); err != nil {
 			brokersStatus = fmt.Appendf(
 				brokersStatus,
-				"Broker '%s' is up\n",
+				"Failed to close broker '%s': %v\n",
 				broker.Addr(),
+				err,
 			)
 		}
 	}
